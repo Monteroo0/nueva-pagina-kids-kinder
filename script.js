@@ -12,10 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
         popupModal.style.display = 'none';
     });
     
+    // Close popup when clicking on the overlay (but not inside the container)
     popupModal.addEventListener('click', (e) => {
         if (e.target === popupModal) {
             popupModal.style.display = 'none';
         }
+    });
+    
+    // Prevent closing when clicking inside the popup container
+    const popupContainer = document.querySelector('.popup-container');
+    popupContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
     });
     
     // --- Carousel Logic ---
