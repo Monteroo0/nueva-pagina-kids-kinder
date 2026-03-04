@@ -85,6 +85,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (next) next.addEventListener('click', () => { nextBy(1); pauseAuto(); });
 });
 
+// Smooth scroll to contact section for CTA buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const contactoSection = document.getElementById('contacto');
+    if (!contactoSection) return;
+
+    const ctaButtons = document.querySelectorAll('.btn-contacto-scroll');
+    ctaButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const header = document.querySelector('.site-header');
+            const headerOffset = header ? header.offsetHeight : 0;
+            const targetTop = contactoSection.getBoundingClientRect().top + window.scrollY - headerOffset - 12;
+
+            window.scrollTo({
+                top: Math.max(targetTop, 0),
+                behavior: 'smooth'
+            });
+        });
+    });
+});
+
 // Update form validation to submit directly without multi-step
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contact-form');
