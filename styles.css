@@ -259,7 +259,7 @@ section {
 
 .section-subtitle {
     text-align: center;
-    color: #666;
+    color: #000000;
     margin-bottom: 40px;
     font-size: 1.1rem;
 }
@@ -600,8 +600,27 @@ section {
 
 .contacto-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+        "map info form"
+        "map street form";
     gap: 24px;
+}
+
+.contacto-map-box {
+    grid-area: map;
+}
+
+.contacto-info-box {
+    grid-area: info;
+}
+
+.street-view-box {
+    grid-area: street;
+}
+
+.contacto-form {
+    grid-area: form;
 }
 
 .contacto-info-box {
@@ -644,13 +663,22 @@ section {
     text-decoration: none;
 }
 
-.street-view-box {
-    grid-column: span 2;
-}
-
 .street-view-box iframe {
     width: 100%;
     height: 300px;
+    border-radius: 12px;
+    border: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.contacto-map {
+    height: 100%;
+}
+
+.contacto-map iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
     border-radius: 12px;
     border: 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -752,6 +780,11 @@ section {
     }
     .contacto-grid {
         grid-template-columns: 1fr;
+        grid-template-areas:
+            "map"
+            "info"
+            "street"
+            "form";
     }
 }
 

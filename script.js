@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Zona de Juegos images
     rotateImages('.salon-juegos', [
-        'img/9.jpg',
+        'img/9.png',
         'img/Juegos2.jpg',
         'img/Juegos3.jpg'
     ], 4000);
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     juegosCard.addEventListener('click', () => {
         galleryImagesContainer.innerHTML = '';
         const images = [
-            'img/9.jpg',
+            'img/9.png',
             'img/Juegos2.jpg',
             'img/Juegos3.jpg'
         ];
