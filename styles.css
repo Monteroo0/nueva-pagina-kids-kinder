@@ -82,12 +82,20 @@ html, body {
     background: rgba(255,255,255,0.2);
 }
 
-.btn-nav-cta {
+.btn-nav-cta,
+.hero-content .btn-primary {
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background 0.3s, color 0.3s;
     background: var(--color-orange) !important;
     color: #fff !important;
 }
 
-.btn-nav-cta:hover {
+.btn-nav-cta:hover,
+.hero-content .btn-primary:hover {
     background: var(--color-yellow) !important;
     color: var(--color-text) !important;
 }
@@ -306,7 +314,7 @@ section {
 
 .salones-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
     position: relative;
     z-index: 2;
@@ -442,6 +450,54 @@ section {
     object-fit: cover;
     border-radius: 10%;
     cursor: pointer;
+}
+
+.gallery-images.layout-amplias {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-content: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.gallery-images.layout-amplias img {
+    height: 100%;
+    min-height: 0;
+}
+
+.gallery-images.layout-juegos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-content: center;
+    overflow: hidden;
+}
+
+.gallery-images.layout-juegos img {
+    height: 100%;
+    min-height: 0;
+}
+
+.gallery-images.layout-juegos img:nth-child(3) {
+    grid-column: 1 / span 2;
+    justify-self: center;
+    width: min(50%, 520px);
+}
+
+.gallery-images.layout-arte,
+.gallery-images.layout-auditorio {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 1fr;
+    gap: 16px;
+    align-content: center;
+    overflow: hidden;
+}
+
+.gallery-images.layout-arte img,
+.gallery-images.layout-auditorio img {
+    height: 100%;
+    min-height: 0;
 }
 
 /* Image Modal */

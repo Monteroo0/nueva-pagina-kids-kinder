@@ -301,10 +301,29 @@ document.addEventListener('DOMContentLoaded', () => {
             imageModal.style.display = 'none';
         }
     });
+
+    const galleryLayouts = ['layout-amplias', 'layout-juegos', 'layout-arte', 'layout-auditorio'];
+    const clearGalleryLayout = () => {
+        galleryImagesContainer.classList.remove(...galleryLayouts);
+    };
+
+    const openGallery = (images, altText, layoutClass) => {
+        galleryImagesContainer.innerHTML = '';
+        clearGalleryLayout();
+        if (layoutClass) galleryImagesContainer.classList.add(layoutClass);
+
+        images.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = altText;
+            galleryImagesContainer.appendChild(img);
+        });
+
+        galleryModal.style.display = 'block';
+    };
     
     // Aulas Amplias Gallery
     ampliasCard.addEventListener('click', () => {
-        galleryImagesContainer.innerHTML = '';
         const images = [
             'img/Sala_Amarilla.jpg',
             'img/Sala_Amarilla2.jpg',
@@ -315,34 +334,19 @@ document.addEventListener('DOMContentLoaded', () => {
             'img/Sala_Roja.jpg',
             'img/Sala_Roja2.jpg'
         ];
-        
-        images.forEach(src => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = 'Imagen de aula amplia';
-            galleryImagesContainer.appendChild(img);
-        });
-        
-        galleryModal.style.display = 'block';
+
+        openGallery(images, 'Imagen de aula amplia', 'layout-amplias');
     });
     
     // Zona de Juegos Gallery
     juegosCard.addEventListener('click', () => {
-        galleryImagesContainer.innerHTML = '';
         const images = [
             'img/9.png',
             'img/Juegos2.jpg',
             'img/Juegos3.jpg'
         ];
-        
-        images.forEach(src => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = 'Imagen de zona de juegos';
-            galleryImagesContainer.appendChild(img);
-        });
-        
-        galleryModal.style.display = 'block';
+
+        openGallery(images, 'Imagen de zona de juegos', 'layout-juegos');
     });
     
     // Comedor Image Modal
@@ -354,38 +358,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Arte y Creatividad Gallery
     arteCard.addEventListener('click', () => {
-        galleryImagesContainer.innerHTML = '';
         const images = [
             'img/Sala_Artes.jpg',
             'img/Sala_Artes2.jpg'
         ];
-        
-        images.forEach(src => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = 'Imagen de arte y creatividad';
-            galleryImagesContainer.appendChild(img);
-        });
-        
-        galleryModal.style.display = 'block';
+
+        openGallery(images, 'Imagen de arte y creatividad', 'layout-arte');
     });
     
     // Auditorio Gallery
     auditorioCard.addEventListener('click', () => {
-        galleryImagesContainer.innerHTML = '';
         const images = [
             'img/Auditorio.jpg',
             'img/Auditorio2.jpg'
         ];
-        
-        images.forEach(src => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = 'Imagen del auditorio';
-            galleryImagesContainer.appendChild(img);
-        });
-        
-        galleryModal.style.display = 'block';
+
+        openGallery(images, 'Imagen del auditorio', 'layout-auditorio');
     });
     
     // Tecnología y Desarrollo Image Modal
