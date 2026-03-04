@@ -278,9 +278,13 @@ section {
 }
 
 /* --- Welcome --- */
+.section-welcome,
+.salones {
+    background: url('img/fondo_salones.png') center/cover no-repeat;
+}
+
 .section-welcome {
     padding: 60px 0;
-    background: url('img/fondo_salones.png') center/cover no-repeat;
     background-color: #fff;
 }
 
@@ -305,16 +309,7 @@ section {
 /* --- Salones --- */
 .salones {
     position: relative;
-    background: url('img/fondo_salones.png') center/cover no-repeat;
     overflow: hidden;
-}
-
-.salones::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.9); /* Overlay blanco para legibilidad */
-    z-index: 1;
 }
 
 .salones-grid {
@@ -322,7 +317,6 @@ section {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
     position: relative;
-    z-index: 2;
 }
 
 .salon-card {
