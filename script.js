@@ -216,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     // Image rotation for specific sections
     const rotateImages = (containerClass, imageSources, intervalTime = 5000) => {
+        const FADE_MS = 500;
         const containers = document.querySelectorAll(containerClass);
         containers.forEach(container => {
             const mainImage = container.querySelector('.salon-main-image');
@@ -224,7 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!mainImage) return;
             
             const updateImage = () => {
-                mainImage.src = imageSources[currentIndex];
+                mainImage.classList.add('is-fading');
+                setTimeout(() => {
+                    mainImage.src = imageSources[currentIndex];
+                    mainImage.classList.remove('is-fading');
+                }, FADE_MS);
                 currentIndex = (currentIndex + 1) % imageSources.length;
             };
             

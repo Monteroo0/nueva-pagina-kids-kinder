@@ -338,25 +338,29 @@ section {
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.3s;
+    transition: transform 0.3s, opacity 500ms ease-in-out;
+}
+
+.salon-main-image.is-fading {
+    opacity: 0;
 }
 
 .salon-card:hover .salon-main-image {
     transform: scale(1.05);
 }
 
-.image-overlay {
+.salon-image-container .image-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0);
+    background: rgba(0, 0, 0, 0.25);
     transition: background 0.3s;
 }
 
-.salon-card:hover .image-overlay {
-    background: rgba(0,0,0,0.1);
+.salon-card:hover .salon-image-container .image-overlay {
+    background: rgba(0,0,0,0.12);
 }
 
 .card-caption {
@@ -451,7 +455,7 @@ section {
     display: none;
 }
 
-.image-overlay {
+.image-modal .image-overlay {
     position: absolute;
     top: 0;
     left: 0;
