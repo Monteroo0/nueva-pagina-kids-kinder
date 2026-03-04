@@ -567,6 +567,57 @@ section {
     }
 }
 
+/* Popup styles */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.popup-container {
+    position: relative;
+    border: 8px solid #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    padding: 16px;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-button {
+    position: absolute;
+    top: -36px;
+    right: 0;
+    background: #FBB81C;
+    color: white;
+    border: none;
+    border-radius: 0;
+    padding: 8px 16px;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+    z-index: 10001;
+}
+
+.popup-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    max-width: 100%;
+    max-height: 85vh;
+}
+
 @media (max-width: 640px) {
     .header-inner {
         justify-content: center;

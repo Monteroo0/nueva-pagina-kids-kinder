@@ -200,3 +200,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Mostrar el popup al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    const popupOverlay = document.getElementById('popup-overlay');
+    
+    // Mostrar el popup después de que la página cargue
+    setTimeout(() => {
+        popupOverlay.style.display = 'flex';
+    }, 500); // Pequeño delay para asegurar que todo esté cargado
+    
+    // Cerrar el popup al hacer clic en el botón de cerrar
+    const closePopupButton = document.getElementById('close-popup');
+    closePopupButton.addEventListener('click', () => {
+        popupOverlay.style.display = 'none';
+    });
+    
+    // Cerrar el popup al hacer clic en el overlay (fuera del contenedor)
+    popupOverlay.addEventListener('click', (event) => {
+        if (event.target === popupOverlay) {
+            popupOverlay.style.display = 'none';
+        }
+    });
+    
+    // Evitar que el clic dentro del contenedor cierre el popup
+    const popupContainer = document.querySelector('.popup-container');
+    popupContainer.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+});
