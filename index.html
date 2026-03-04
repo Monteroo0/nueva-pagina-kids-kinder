@@ -28,20 +28,39 @@
             </nav>
         </div>
     </header>
+    
+    <!-- Popup Modal -->
+    <div id="popup-modal" class="popup-overlay">
+        <div class="popup-container">
+            <button id="close-popup" class="popup-close-btn">CERRAR</button>
+            <img src="img/1.png" alt="Bienvenidos a Kid's Kinder" class="popup-image">
+        </div>
+    </div>
 
     <main>
         <!-- Hero Slider -->
         <section id="inicio" class="hero-slider" aria-label="Galería destacada">
             <div class="carousel" id="carousel">
-                <!-- Las imágenes del slider deberían ser fotos emocionales de niños felices -->
                 <div class="slide active">
-                    <img src="img/1.png" alt="Niños jugando felices en Kid's Kinder" loading="eager">
+                    <img src="img/2.png" alt="Niños jugando felices en Kid's Kinder" loading="eager">
                 </div>
                 <div class="slide">
-                    <img src="img/2.png" alt="Actividad educativa en el salón" loading="lazy">
+                    <img src="img/4.png" alt="Actividad educativa en el salón" loading="lazy">
                 </div>
                 <div class="slide">
-                    <img src="img/3.png" alt="Espacios seguros para el aprendizaje" loading="lazy">
+                    <img src="img/5.png" alt="Espacios seguros para el aprendizaje" loading="lazy">
+                </div>
+                <div class="slide">
+                    <img src="img/6.png" alt="Espacios seguros para el aprendizaje" loading="lazy">
+                </div>
+                <div class="slide">
+                    <img src="img/7.png" alt="Espacios seguros para el aprendizaje" loading="lazy">
+                </div>
+                <div class="slide">
+                    <img src="img/8.png" alt="Espacios seguros para el aprendizaje" loading="lazy">
+                </div>
+                <div class="slide">
+                    <img src="img/9.png" alt="Espacios seguros para el aprendizaje" loading="lazy">
                 </div>
                 
                 <button class="nav-btn prev" aria-label="Imagen anterior">&#10094;</button>
@@ -76,23 +95,81 @@
                 <h2 class="section-title text-green">Nuestros Espacios</h2>
                 <p class="section-subtitle">Conoce donde tus hijos aprenderán y jugarán</p>
                 <div class="salones-grid">
-                    <!-- Usando las imágenes numeradas como solicitó el contexto -->
-                    <article class="salon-card">
-                        <img src="img/4.jpg" alt="Salón de clases principal" loading="lazy">
+                    <!-- Aulas Amplias -->
+                    <article class="salon-card salon-amplias">
+                        <div class="salon-image-container">
+                            <img src="img/Sala_Amarilla.jpg" alt="Aulas amplias y luminosas" loading="lazy" class="salon-main-image">
+                            <div class="image-overlay"></div>
+                        </div>
                         <div class="card-caption">Aulas Amplias</div>
                     </article>
-                    <article class="salon-card">
-                        <img src="img/5.jpg" alt="Zona de juegos" loading="lazy">
+                    
+                    <!-- Zona de Juegos -->
+                    <article class="salon-card salon-juegos">
+                        <div class="salon-image-container">
+                            <img src="img/9.jpg" alt="Zona de juegos segura" loading="lazy" class="salon-main-image">
+                            <div class="image-overlay"></div>
+                        </div>
                         <div class="card-caption">Zona de Juegos</div>
                     </article>
-                    <article class="salon-card">
-                        <img src="img/6.jpg" alt="Comedor escolar" loading="lazy">
+                    
+                    <!-- Comedor -->
+                    <article class="salon-card salon-comedor">
+                        <div class="salon-image-container">
+                            <img src="img/Cafeteria.jpg" alt="Comedor escolar" loading="lazy" class="salon-main-image">
+                            <div class="image-overlay"></div>
+                        </div>
                         <div class="card-caption">Comedor</div>
                     </article>
-                    <article class="salon-card">
-                        <img src="img/7.jpg" alt="Área de arte" loading="lazy">
+                    
+                    <!-- Arte y Creatividad -->
+                    <article class="salon-card salon-arte">
+                        <div class="salon-image-container">
+                            <img src="img/Sala_Artes.jpg" alt="Área de arte y creatividad" loading="lazy" class="salon-main-image">
+                            <div class="image-overlay"></div>
+                        </div>
                         <div class="card-caption">Arte y Creatividad</div>
                     </article>
+                    
+                    <!-- Auditorio -->
+                    <article class="salon-card salon-auditorio">
+                        <div class="salon-image-container">
+                            <img src="img/Auditorio.jpg" alt="Auditorio para eventos" loading="lazy" class="salon-main-image">
+                            <div class="image-overlay"></div>
+                        </div>
+                        <div class="card-caption">Auditorio</div>
+                    </article>
+                    
+                    <!-- Tecnología y Desarrollo -->
+                    <article class="salon-card salon-tecnologia">
+                        <div class="salon-image-container">
+                            <img src="img/Sala_Informatica.jpg" alt="Área de tecnología" loading="lazy" class="salon-main-image">
+                            <div class="image-overlay"></div>
+                        </div>
+                        <div class="card-caption">Tecnología y Desarrollo</div>
+                    </article>
+                </div>
+            </div>
+            
+            <!-- Galería modal -->
+            <div id="gallery-modal" class="gallery-modal">
+                <div class="gallery-overlay"></div>
+                <div class="gallery-container">
+                    <button id="close-gallery" class="gallery-close-btn">X</button>
+                    <div class="gallery-content">
+                        <div class="gallery-images">
+                            <!-- Las imágenes se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Imagen modal -->
+            <div id="image-modal" class="image-modal">
+                <div class="image-overlay"></div>
+                <div class="image-container">
+                    <button id="close-image" class="image-close-btn">X</button>
+                    <img id="modal-image" src="" alt="">
                 </div>
             </div>
         </section>
@@ -179,11 +256,9 @@
                         </div>
                     </div>
 
-                    <!-- Mapa -->
-                    <div class="contacto-map-box">
-                        <div class="contacto-map">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.0!2d-73.1!3d7.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMDYnMDAuMCJOIDczwrAwNiowMC4wIlc!5e0!3m2!1ses!2sco!4v1600000000000!5m2!1ses!2sco" loading="lazy" title="Ubicación Kid's Kinder"></iframe>
-                        </div>
+                    <!-- Street View -->
+                    <div class="street-view-box">
+                        <iframe src="https://www.google.com/maps/embed?pb=!4v1765489251127!6m8!1m7!1sD2-AP62GuYcE4Qz-gYu2iQ!2m2!1d7.134035830310263!2d-73.11791300582212!3f82.8098293959663!4f-20.24194488443962!5f0.7820865974627469" width="100%" height="300" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Street View Kid's Kinder"></iframe>
                     </div>
 
                     <!-- Formulario -->
@@ -203,13 +278,6 @@
                                     <label for="cf-cel" class="form-label">Celular</label>
                                     <input type="tel" id="cf-cel" placeholder="300 123 4567" required>
                                 </div>
-                                <div class="form-actions">
-                                    <button type="button" id="cf-next" class="btn btn-primary">Siguiente</button>
-                                </div>
-                            </div>
-
-                            <div class="form-step step-2" hidden>
-                                <h3 class="form-label">Mensaje</h3>
                                 <div>
                                     <label for="cf-asunto" class="form-label">Asunto</label>
                                     <input type="text" id="cf-asunto" placeholder="Información admisiones" required>
@@ -219,11 +287,17 @@
                                     <textarea id="cf-mensaje" rows="4" placeholder="¿En qué podemos ayudarte?" required></textarea>
                                 </div>
                                 <div class="form-actions">
-                                    <button type="button" id="cf-prev" class="btn">Atrás</button>
                                     <button type="submit" class="btn btn-success">Enviar Mensaje</button>
                                 </div>
                             </div>
                         </form>
+                    </div>
+                    
+                    <!-- Mapa -->
+                    <div class="contacto-map-box">
+                        <div class="contacto-map">
+                            <iframe src=" https://www.google.com/maps?q=Carrera%2030%20%2314%20-%2027%20San%20Alonso,%20Bucaramanga,%20Colombia,%20680001&output=embed" loading="lazy" title="Ubicación Kid's Kinder" style="width:100%; height:100%; border:0;"></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
