@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // Create mailto link with all the information
-        const to = 'juanestebanmonteroarias7@gmail.com';
+        const to = 'kidskinder@hotmail.com';
         const subject = encodeURIComponent(formData.asunto);
         const body = encodeURIComponent(
             `Nombre: ${formData.nombre}\nEmail: ${formData.email}\nCelular: ${formData.celular}\n\n${formData.mensaje}`
