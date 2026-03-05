@@ -85,19 +85,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (next) next.addEventListener('click', () => { nextBy(1); pauseAuto(); });
 });
 
-// Smooth scroll to contact section for CTA buttons
+// Smooth scroll for internal section links
 document.addEventListener('DOMContentLoaded', () => {
-    const contactoSection = document.getElementById('contacto');
-    if (!contactoSection) return;
+    const internalLinks = document.querySelectorAll('a[href^="#"]');
 
-    const ctaButtons = document.querySelectorAll('.btn-contacto-scroll');
-    ctaButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
+    internalLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        const target = document.querySelector(href);
+        if (!target) return;
+
+        link.addEventListener('click', (event) => {
             event.preventDefault();
 
             const header = document.querySelector('.site-header');
             const headerOffset = header ? header.offsetHeight : 0;
-            const targetTop = contactoSection.getBoundingClientRect().top + window.scrollY - headerOffset - 12;
+            const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset - 12;
 
             window.scrollTo({
                 top: Math.max(targetTop, 0),
