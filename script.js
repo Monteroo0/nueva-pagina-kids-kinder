@@ -12,10 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
         popupModal.style.display = 'none';
     });
     
+    // Close popup when clicking on the overlay (but not inside the container)
     popupModal.addEventListener('click', (e) => {
         if (e.target === popupModal) {
             popupModal.style.display = 'none';
         }
+    });
+    
+    // Prevent closing when clicking inside the popup container
+    const popupContainer = document.querySelector('.popup-container');
+    popupContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
     });
     
     // --- Carousel Logic ---
@@ -76,6 +83,28 @@ document.addEventListener('DOMContentLoaded', () => {
     startAuto();
     if (prev) prev.addEventListener('click', () => { nextBy(-1); pauseAuto(); });
     if (next) next.addEventListener('click', () => { nextBy(1); pauseAuto(); });
+});
+
+// Smooth scroll to contact section for CTA buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const contactoSection = document.getElementById('contacto');
+    if (!contactoSection) return;
+
+    const ctaButtons = document.querySelectorAll('.btn-contacto-scroll');
+    ctaButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const header = document.querySelector('.site-header');
+            const headerOffset = header ? header.offsetHeight : 0;
+            const targetTop = contactoSection.getBoundingClientRect().top + window.scrollY - headerOffset - 12;
+
+            window.scrollTo({
+                top: Math.max(targetTop, 0),
+                behavior: 'smooth'
+            });
+        });
+    });
 });
 
 // Update form validation to submit directly without multi-step
@@ -214,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Zona de Juegos images
     rotateImages('.salon-juegos', [
-        'img/9.jpg',
+        'img/9.png',
         'img/Juegos2.jpg',
         'img/Juegos3.jpg'
     ], 4000);
@@ -296,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     juegosCard.addEventListener('click', () => {
         galleryImagesContainer.innerHTML = '';
         const images = [
-            'img/9.jpg',
+            'img/9.png',
             'img/Juegos2.jpg',
             'img/Juegos3.jpg'
         ];
