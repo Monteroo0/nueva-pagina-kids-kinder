@@ -38,7 +38,7 @@ html, body {
 
 /* --- Header --- */
 .site-header {
-    background: url('img/encabezado.png') center/cover no-repeat;
+    background: url('img/Encabezado.png') center/cover no-repeat;
     height: var(--header-height);
     width: 100%;
     position: sticky;
