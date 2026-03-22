@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         slides.forEach((el, idx) => el.classList.toggle('active', idx === x));
     }
 
-    function doAnim(cur, ne, dir) {
+    function doAnim(cur, ne) {
         anim = true;
-        ne.classList.add('active');
-        // Simplified animation classes for robustness
+        ne.classList.add('active', 'is-entering');
         setTimeout(() => {
             cur.classList.remove('active');
+            ne.classList.remove('is-entering');
             anim = false;
             if (queued) {
                 const d = queued;
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nx = (i + delta + slides.length) % slides.length;
         const cur = slides[i];
         const ne = slides[nx];
-        doAnim(cur, ne, delta > 0 ? 'right' : 'left');
+        doAnim(cur, ne);
         i = nx;
     }
 
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Card click handlers for galleries and image modals
     const ampliasCard = document.querySelector('.salon-amplias');
     const juegosCard = document.querySelector('.salon-juegos');
-    const comedorCard = document.querySelector('.salon-comedor');
+    const cafeteriaCard = document.querySelector('.salon-cafeteria');
     const arteCard = document.querySelector('.salon-arte');
     const auditorioCard = document.querySelector('.salon-auditorio');
     const tecnologiaCard = document.querySelector('.salon-tecnologia');
@@ -353,10 +353,10 @@ document.addEventListener('DOMContentLoaded', () => {
         openGallery(images, 'Imagen de zona de juegos', 'layout-juegos');
     });
     
-    // Comedor Image Modal
-    comedorCard.addEventListener('click', () => {
+    // Cafeteria Image Modal
+    cafeteriaCard.addEventListener('click', () => {
         modalImage.src = 'img/Cafeteria.jpg';
-        modalImage.alt = 'Imagen del comedor';
+        modalImage.alt = 'Imagen de la cafeteria';
         imageModal.style.display = 'block';
     });
     
