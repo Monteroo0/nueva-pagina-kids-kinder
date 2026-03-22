@@ -955,8 +955,27 @@ section {
     .header-inner {
         justify-content: center;
     }
+    .hero-overlay {
+        padding: 0 14px 16px;
+    }
+    .hero-content {
+        width: min(88%, 32rem);
+    }
     .hero-content h1 {
         font-size: clamp(1.15rem, 6vw, 2rem);
+        margin-bottom: 10px;
+        line-height: 1.2;
+    }
+    .hero-content p {
+        font-size: clamp(0.78rem, 3vw, 0.98rem);
+        margin-bottom: 12px;
+        max-width: 26rem;
+        line-height: 1.35;
+    }
+    .hero-content .btn-primary {
+        padding: 7px 14px;
+        font-size: 0.9rem;
+        border-radius: 18px;
     }
     .nav-btn {
         width: 40px;
