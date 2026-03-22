@@ -21,11 +21,32 @@
                     <img src="img/escudo.png" alt="Logo Kid's Kinder Preescolar" height="80">
                 </a>
             </div>
+            <button
+                class="mobile-menu-toggle"
+                type="button"
+                aria-label="Abrir menú principal"
+                aria-expanded="false"
+                aria-controls="mobile-nav-panel">
+                <svg class="ct-icon ct-icon-menu" width="18" height="14" viewBox="0 0 18 14" aria-hidden="true" data-type="type-1">
+                    <rect y="0.00" width="18" height="1.7" rx="1"></rect>
+                    <rect y="6.15" width="18" height="1.7" rx="1"></rect>
+                    <rect y="12.3" width="18" height="1.7" rx="1"></rect>
+                </svg>
+                <svg class="ct-icon ct-icon-close" width="12" height="12" viewBox="0 0 15 15" aria-hidden="true">
+                    <path d="M1 15a1 1 0 01-.71-.29 1 1 0 010-1.41l5.8-5.8-5.8-5.8A1 1 0 011.7.29l5.8 5.8 5.8-5.8a1 1 0 011.41 1.41l-5.8 5.8 5.8 5.8a1 1 0 01-1.41 1.41l-5.8-5.8-5.8 5.8A1 1 0 011 15z"></path>
+                </svg>
+            </button>
             <nav class="header-nav" aria-label="Menú principal">
                 <a href="#inicio">Inicio</a>
                 <a href="#salones">Salones</a>
                 <a href="#redes">Comunidad</a>
                 <a href="#contacto" class="btn-nav-cta">Contáctanos</a>
+            </nav>
+            <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Menú móvil" aria-hidden="true">
+                <a href="#inicio">Inicio</a>
+                <a href="#salones">Salones</a>
+                <a href="#redes">Comunidad</a>
+                <a href="#contacto">Contáctanos</a>
             </nav>
         </div>
     </header>

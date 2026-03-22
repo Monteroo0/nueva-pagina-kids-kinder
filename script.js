@@ -111,6 +111,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileNavPanel = document.getElementById('mobile-nav-panel');
+    if (!menuToggle || !mobileNavPanel) return;
+
+    const mobileLinks = mobileNavPanel.querySelectorAll('a[href^="#"]');
+
+    function setMenuState(isOpen) {
+        document.body.classList.toggle('mobile-menu-open', isOpen);
+        menuToggle.classList.toggle('is-open', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.setAttribute('aria-label', isOpen ? 'Cerrar menú principal' : 'Abrir menú principal');
+        mobileNavPanel.setAttribute('aria-hidden', String(!isOpen));
+    }
+
+    menuToggle.addEventListener('click', () => {
+        const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+        setMenuState(!isOpen);
+    });
+
+    mobileLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+            setMenuState(false);
+        });
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            setMenuState(false);
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 960) {
+            setMenuState(false);
+        }
+    });
+});
+
 // Update form validation to submit directly without multi-step
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contact-form');
