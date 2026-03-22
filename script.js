@@ -2,28 +2,69 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Popup Modal ---
     const popupModal = document.getElementById('popup-modal');
     const closePopup = document.getElementById('close-popup');
-    
-    // Show popup when page loads
-    setTimeout(() => {
-        popupModal.style.display = 'flex';
-    }, 500); // Small delay to ensure page is loaded
-    
-    closePopup.addEventListener('click', () => {
-        popupModal.style.display = 'none';
-    });
-    
-    // Close popup when clicking on the overlay (but not inside the container)
-    popupModal.addEventListener('click', (e) => {
-        if (e.target === popupModal) {
-            popupModal.style.display = 'none';
-        }
-    });
-    
-    // Prevent closing when clicking inside the popup container
     const popupContainer = document.querySelector('.popup-container');
-    popupContainer.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
+    const POPUP_STEP_MS = 500;
+    let popupOpeningTimer;
+    let popupClosingTimer;
+    let isPopupClosing = false;
+
+    if (popupModal && closePopup && popupContainer) {
+        function clearPopupTimers() {
+            clearTimeout(popupOpeningTimer);
+            clearTimeout(popupClosingTimer);
+        }
+
+        function openPopup() {
+            clearPopupTimers();
+            isPopupClosing = false;
+            popupModal.classList.add('is-mounted');
+
+            requestAnimationFrame(() => {
+                popupModal.classList.add('is-overlay-visible');
+            });
+
+            popupOpeningTimer = setTimeout(() => {
+                if (!isPopupClosing) {
+                    popupModal.classList.add('is-popup-visible');
+                }
+            }, POPUP_STEP_MS);
+        }
+
+        function closePopupModal() {
+            if (isPopupClosing) return;
+
+            isPopupClosing = true;
+            clearPopupTimers();
+            popupModal.classList.remove('is-popup-visible');
+
+            popupClosingTimer = setTimeout(() => {
+                popupModal.classList.remove('is-overlay-visible');
+
+                popupClosingTimer = setTimeout(() => {
+                    popupModal.classList.remove('is-mounted');
+                    isPopupClosing = false;
+                }, POPUP_STEP_MS);
+            }, POPUP_STEP_MS);
+        }
+
+        window.addEventListener('load', () => {
+            openPopup();
+        }, { once: true });
+
+        closePopup.addEventListener('click', closePopupModal);
+
+        // Close popup when clicking on the overlay (but not inside the container)
+        popupModal.addEventListener('click', (e) => {
+            if (e.target === popupModal) {
+                closePopupModal();
+            }
+        });
+
+        // Prevent closing when clicking inside the popup container
+        popupContainer.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
     
     // --- Carousel Logic ---
     const c = document.getElementById('carousel');
