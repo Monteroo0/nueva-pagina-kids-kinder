@@ -193,7 +193,16 @@
                 <div class="image-overlay"></div>
                 <div class="image-container">
                     <button id="close-image" class="image-close-btn">X</button>
-                    <img id="modal-image" src="" alt="">
+                    <button type="button" class="gallery-nav-btn gallery-nav-prev" aria-label="Imagen anterior">&#10094;</button>
+                    <div class="image-slider-stage">
+                        <div class="image-slide active">
+                            <img id="modal-image-primary" src="" alt="">
+                        </div>
+                        <div class="image-slide">
+                            <img id="modal-image-secondary" src="" alt="">
+                        </div>
+                    </div>
+                    <button type="button" class="gallery-nav-btn gallery-nav-next" aria-label="Imagen siguiente">&#10095;</button>
                 </div>
             </div>
         </section>

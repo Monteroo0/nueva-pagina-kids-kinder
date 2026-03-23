@@ -459,19 +459,33 @@ section {
     overflow: hidden;
 }
 
+.salon-image-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+    z-index: 0;
+}
+
+.salon-image-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.salon-image-slide.is-entering {
+    z-index: 2;
+}
+
 .salon-main-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.3s, opacity 500ms ease-in-out;
+    transition: transform 0.3s;
 }
 
-.salon-main-image.is-fading {
-    opacity: 0;
-}
-
-.salon-card:hover .salon-main-image {
+.salon-card:hover .salon-image-slide.active .salon-main-image,
+.salon-card:hover .salon-image-slide.is-entering .salon-main-image {
     transform: scale(1.05);
 }
 
@@ -505,7 +519,10 @@ section {
     width: 100%;
     height: 100%;
     z-index: 10000;
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 500ms ease, visibility 0s linear 1000ms;
 }
 
 .gallery-overlay {
@@ -526,6 +543,9 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    transition: opacity 500ms ease, transform 500ms ease;
 }
 
 .gallery-close-btn {
@@ -626,7 +646,10 @@ section {
     width: 100%;
     height: 100%;
     z-index: 10000;
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 500ms ease, visibility 0s linear 1000ms;
 }
 
 .image-modal .image-overlay {
@@ -647,6 +670,54 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.gallery-modal.is-mounted,
+.image-modal.is-mounted {
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.gallery-modal.is-overlay-visible,
+.image-modal.is-overlay-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.gallery-modal.is-popup-visible .gallery-container,
+.image-modal.is-popup-visible .image-container {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.image-slider-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.image-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.image-slide.is-entering {
+    z-index: 2;
 }
 
 .image-close-btn {
@@ -665,11 +736,44 @@ section {
     font-size: 18px;
 }
 
-#modal-image {
+.image-slide img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     border-radius: 10%;
+}
+
+.gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: rgba(255, 255, 255, 0.92);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--color-green);
+    z-index: 10001;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.gallery-nav-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav-prev {
+    left: 16px;
+}
+
+.gallery-nav-next {
+    right: 16px;
+}
+
+.gallery-nav-btn.is-hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* --- Redes --- */
@@ -964,6 +1068,14 @@ section {
     .welcome-grid {
         grid-template-columns: 1fr;
     }
+    .salones-grid {
+        grid-template-columns: 1fr;
+    }
+    .salon-card {
+        width: 100%;
+        max-width: 34rem;
+        margin: 0 auto;
+    }
     .contacto-grid {
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -979,31 +1091,50 @@ section {
         justify-content: center;
     }
     .hero-overlay {
-        padding: 0 14px 16px;
+        padding: 0 10px 14px;
     }
     .hero-content {
         width: min(88%, 32rem);
     }
     .hero-content h1 {
-        font-size: clamp(1.15rem, 6vw, 2rem);
-        margin-bottom: 10px;
-        line-height: 1.2;
+        font-size: clamp(0.95rem, 3.375vw, 1.35rem);
+        margin-bottom: clamp(8px, 1.8vw, 10px);
+        line-height: 1.18;
+        hyphens: auto;
+        overflow-wrap: break-word;
     }
     .hero-content p {
-        font-size: clamp(0.78rem, 3vw, 0.98rem);
-        margin-bottom: 12px;
-        max-width: 26rem;
-        line-height: 1.35;
+        font-size: clamp(0.72rem, 2.25vw, 0.9rem);
+        margin-bottom: clamp(10px, 2vw, 12px);
+        max-width: min(100%, 26rem);
+        line-height: 1.32;
+        hyphens: auto;
+        overflow-wrap: break-word;
     }
     .hero-content .btn-primary {
-        padding: 7px 14px;
-        font-size: 0.9rem;
+        padding: 0.7em 1.2em;
+        font-size: clamp(0.78rem, 2.6vw, 0.9rem);
         border-radius: 18px;
     }
     .nav-btn {
         width: 40px;
         height: 40px;
         font-size: 18px;
+    }
+    .image-container {
+        width: 94%;
+        height: 82vh;
+    }
+    .gallery-nav-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+    }
+    .gallery-nav-prev {
+        left: 8px;
+    }
+    .gallery-nav-next {
+        right: 8px;
     }
 }
 

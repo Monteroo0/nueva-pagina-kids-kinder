@@ -303,18 +303,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const FADE_MS = 500;
         const containers = document.querySelectorAll(containerClass);
         containers.forEach(container => {
-            const mainImage = container.querySelector('.salon-main-image');
+            const imageContainer = container.querySelector('.salon-image-container');
+            const mainImage = imageContainer ? imageContainer.querySelector('.salon-main-image') : null;
+
+            if (!imageContainer || !mainImage || imageSources.length <= 1) return;
+
+            const primarySlide = document.createElement('div');
+            primarySlide.className = 'salon-image-slide active';
+            const secondarySlide = document.createElement('div');
+            secondarySlide.className = 'salon-image-slide';
+
+            const primaryImage = mainImage.cloneNode(true);
+            const secondaryImage = mainImage.cloneNode(true);
+
+            primarySlide.appendChild(primaryImage);
+            secondarySlide.appendChild(secondaryImage);
+            mainImage.remove();
+            imageContainer.insertBefore(primarySlide, imageContainer.firstChild);
+            imageContainer.insertBefore(secondarySlide, imageContainer.querySelector('.image-overlay'));
+
             let currentIndex = 0;
-            
-            if (!mainImage) return;
-            
+            let activeSlideIndex = 0;
+
+            const slides = [primarySlide, secondarySlide];
+            const images = [primaryImage, secondaryImage];
+
             const updateImage = () => {
-                mainImage.classList.add('is-fading');
+                const nextIndex = (currentIndex + 1) % imageSources.length;
+                const currentSlide = slides[activeSlideIndex];
+                const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
+                const nextSlide = slides[nextSlideIndex];
+                const nextImage = images[nextSlideIndex];
+
+                nextImage.src = imageSources[nextIndex];
+                nextImage.alt = primaryImage.alt;
+                nextSlide.classList.add('active', 'is-entering');
+
                 setTimeout(() => {
-                    mainImage.src = imageSources[currentIndex];
-                    mainImage.classList.remove('is-fading');
+                    currentSlide.classList.remove('active');
+                    nextSlide.classList.remove('is-entering');
+                    currentIndex = nextIndex;
+                    activeSlideIndex = nextSlideIndex;
                 }, FADE_MS);
-                currentIndex = (currentIndex + 1) % imageSources.length;
             };
             
             // Change image periodically
@@ -350,46 +380,242 @@ document.addEventListener('DOMContentLoaded', () => {
     ], 5000);
     
     // Card click handlers for galleries and image modals
-    const ampliasCard = document.querySelector('.salon-amplias');
-    const juegosCard = document.querySelector('.salon-juegos');
-    const cafeteriaCard = document.querySelector('.salon-cafeteria');
-    const arteCard = document.querySelector('.salon-arte');
-    const auditorioCard = document.querySelector('.salon-auditorio');
-    const tecnologiaCard = document.querySelector('.salon-tecnologia');
-    
     const galleryModal = document.getElementById('gallery-modal');
     const imageModal = document.getElementById('image-modal');
     const galleryImagesContainer = document.querySelector('.gallery-images');
-    const modalImage = document.getElementById('modal-image');
+    const imageSlides = Array.from(document.querySelectorAll('.image-slide'));
+    const modalImages = imageSlides.map((slide) => slide.querySelector('img'));
     const closeGallery = document.getElementById('close-gallery');
     const closeImage = document.getElementById('close-image');
-    
-    // Close buttons functionality
-    closeGallery.addEventListener('click', () => {
-        galleryModal.style.display = 'none';
-    });
-    
-    closeImage.addEventListener('click', () => {
-        imageModal.style.display = 'none';
-    });
-    
-    // Close modals when clicking on overlay
-    galleryModal.addEventListener('click', (e) => {
-        if (e.target === galleryModal) {
-            galleryModal.style.display = 'none';
-        }
-    });
-    
-    imageModal.addEventListener('click', (e) => {
-        if (e.target === imageModal) {
-            imageModal.style.display = 'none';
-        }
-    });
+    const prevGalleryBtn = document.querySelector('.gallery-nav-prev');
+    const nextGalleryBtn = document.querySelector('.gallery-nav-next');
+    const responsiveGallery = window.matchMedia('(max-width: 960px)');
+    const GALLERY_FADE_MS = 500;
 
+    if (!galleryModal || !imageModal || !galleryImagesContainer || imageSlides.length < 2 || modalImages.some((img) => !img) || !closeGallery || !closeImage || !prevGalleryBtn || !nextGalleryBtn) {
+        return;
+    }
+    
     const galleryLayouts = ['layout-amplias', 'layout-juegos', 'layout-arte', 'layout-auditorio'];
+    const MODAL_STEP_MS = 500;
+    const galleriesByCard = {
+        '.salon-amplias': {
+            images: [
+                'img/Sala_Amarilla.jpg',
+                'img/Sala_Amarilla2.jpg',
+                'img/Sala_Azul.jpg',
+                'img/Sala_Azul2.jpg',
+                'img/Sala_Naranja.jpg',
+                'img/Sala_Naranja2.jpg',
+                'img/Sala_Roja.jpg',
+                'img/Sala_Roja2.jpg'
+            ],
+            alt: 'Imagen de aula amplia',
+            layoutClass: 'layout-amplias'
+        },
+        '.salon-juegos': {
+            images: [
+                'img/9.png',
+                'img/Juegos2.jpg',
+                'img/Juegos3.jpg'
+            ],
+            alt: 'Imagen de zona de juegos',
+            layoutClass: 'layout-juegos'
+        },
+        '.salon-cafeteria': {
+            images: ['img/Cafeteria.jpg'],
+            alt: 'Imagen de la cafeteria'
+        },
+        '.salon-arte': {
+            images: [
+                'img/Sala_Artes.jpg',
+                'img/Sala_Artes2.jpg'
+            ],
+            alt: 'Imagen de arte y creatividad',
+            layoutClass: 'layout-arte'
+        },
+        '.salon-auditorio': {
+            images: [
+                'img/Auditorio.jpg',
+                'img/Auditorio2.jpg'
+            ],
+            alt: 'Imagen del auditorio',
+            layoutClass: 'layout-auditorio'
+        },
+        '.salon-tecnologia': {
+            images: ['img/Sala_Informatica.jpg'],
+            alt: 'Imagen de sala informatica'
+        }
+    };
+
+    const galleryState = {
+        images: [],
+        alt: '',
+        index: 0,
+        animating: false,
+        activeSlide: 0
+    };
+    let galleryOpenTimer;
+    let galleryCloseTimer;
+    let imageOpenTimer;
+    let imageCloseTimer;
+    let isGalleryClosing = false;
+    let isImageClosing = false;
+
     const clearGalleryLayout = () => {
         galleryImagesContainer.classList.remove(...galleryLayouts);
     };
+
+    function clearManagedModalTimers(type) {
+        if (type === 'gallery') {
+            clearTimeout(galleryOpenTimer);
+            clearTimeout(galleryCloseTimer);
+            return;
+        }
+
+        clearTimeout(imageOpenTimer);
+        clearTimeout(imageCloseTimer);
+    }
+
+    function openManagedModal(modalEl, type) {
+        clearManagedModalTimers(type);
+
+        if (type === 'gallery') {
+            isGalleryClosing = false;
+        } else {
+            isImageClosing = false;
+        }
+
+        modalEl.classList.add('is-mounted');
+
+        requestAnimationFrame(() => {
+            modalEl.classList.add('is-overlay-visible');
+        });
+
+        const timer = setTimeout(() => {
+            const isClosing = type === 'gallery' ? isGalleryClosing : isImageClosing;
+            if (!isClosing) {
+                modalEl.classList.add('is-popup-visible');
+            }
+        }, MODAL_STEP_MS);
+
+        if (type === 'gallery') {
+            galleryOpenTimer = timer;
+        } else {
+            imageOpenTimer = timer;
+        }
+    }
+
+    function closeManagedModal(modalEl, type, onClosed) {
+        const isClosing = type === 'gallery' ? isGalleryClosing : isImageClosing;
+        if (isClosing) return;
+
+        if (type === 'gallery') {
+            isGalleryClosing = true;
+        } else {
+            isImageClosing = true;
+        }
+
+        clearManagedModalTimers(type);
+        modalEl.classList.remove('is-popup-visible');
+
+        const firstTimer = setTimeout(() => {
+            modalEl.classList.remove('is-overlay-visible');
+
+            const secondTimer = setTimeout(() => {
+                modalEl.classList.remove('is-mounted');
+
+                if (typeof onClosed === 'function') {
+                    onClosed();
+                }
+
+                if (type === 'gallery') {
+                    isGalleryClosing = false;
+                } else {
+                    isImageClosing = false;
+                }
+            }, MODAL_STEP_MS);
+
+            if (type === 'gallery') {
+                galleryCloseTimer = secondTimer;
+            } else {
+                imageCloseTimer = secondTimer;
+            }
+        }, MODAL_STEP_MS);
+
+        if (type === 'gallery') {
+            galleryCloseTimer = firstTimer;
+        } else {
+            imageCloseTimer = firstTimer;
+        }
+    }
+
+    function updateGalleryButtons() {
+        const hideButtons = galleryState.images.length <= 1;
+        prevGalleryBtn.classList.toggle('is-hidden', hideButtons);
+        nextGalleryBtn.classList.toggle('is-hidden', hideButtons);
+    }
+
+    function showGalleryImage(index) {
+        galleryState.index = index;
+        modalImages[galleryState.activeSlide].src = galleryState.images[index];
+        modalImages[galleryState.activeSlide].alt = galleryState.alt;
+        updateGalleryButtons();
+    }
+
+    function openImageSlider(images, altText, startIndex = 0) {
+        galleryState.images = images;
+        galleryState.alt = altText;
+        galleryState.index = startIndex;
+        galleryState.animating = false;
+        galleryState.activeSlide = 0;
+        imageSlides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === 0);
+            slide.classList.remove('is-entering');
+        });
+        showGalleryImage(startIndex);
+        openManagedModal(imageModal, 'image');
+    }
+
+    function closeImageSlider() {
+        closeManagedModal(imageModal, 'image', () => {
+            galleryState.images = [];
+            galleryState.alt = '';
+            galleryState.index = 0;
+            galleryState.animating = false;
+            galleryState.activeSlide = 0;
+            imageSlides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === 0);
+                slide.classList.remove('is-entering');
+            });
+            updateGalleryButtons();
+        });
+    }
+
+    function animateGalleryBy(delta) {
+        if (galleryState.animating || galleryState.images.length <= 1) return;
+
+        galleryState.animating = true;
+        const currentSlideIndex = galleryState.activeSlide;
+        const nextSlideIndex = currentSlideIndex === 0 ? 1 : 0;
+        const currentSlide = imageSlides[currentSlideIndex];
+        const nextSlide = imageSlides[nextSlideIndex];
+        const nextIndex = (galleryState.index + delta + galleryState.images.length) % galleryState.images.length;
+
+        modalImages[nextSlideIndex].src = galleryState.images[nextIndex];
+        modalImages[nextSlideIndex].alt = galleryState.alt;
+
+        nextSlide.classList.add('active', 'is-entering');
+
+        setTimeout(() => {
+            currentSlide.classList.remove('active');
+            nextSlide.classList.remove('is-entering');
+            galleryState.index = nextIndex;
+            galleryState.activeSlide = nextSlideIndex;
+            galleryState.animating = false;
+            updateGalleryButtons();
+        }, GALLERY_FADE_MS);
+    }
 
     const openGallery = (images, altText, layoutClass) => {
         galleryImagesContainer.innerHTML = '';
@@ -403,67 +629,66 @@ document.addEventListener('DOMContentLoaded', () => {
             galleryImagesContainer.appendChild(img);
         });
 
-        galleryModal.style.display = 'block';
+        openManagedModal(galleryModal, 'gallery');
     };
-    
-    // Aulas Amplias Gallery
-    ampliasCard.addEventListener('click', () => {
-        const images = [
-            'img/Sala_Amarilla.jpg',
-            'img/Sala_Amarilla2.jpg',
-            'img/Sala_Azul.jpg',
-            'img/Sala_Azul2.jpg',
-            'img/Sala_Naranja.jpg',
-            'img/Sala_Naranja2.jpg',
-            'img/Sala_Roja.jpg',
-            'img/Sala_Roja2.jpg'
-        ];
+    closeGallery.addEventListener('click', () => {
+        closeManagedModal(galleryModal, 'gallery');
+    });
 
-        openGallery(images, 'Imagen de aula amplia', 'layout-amplias');
-    });
-    
-    // Zona de Juegos Gallery
-    juegosCard.addEventListener('click', () => {
-        const images = [
-            'img/9.png',
-            'img/Juegos2.jpg',
-            'img/Juegos3.jpg'
-        ];
+    closeImage.addEventListener('click', closeImageSlider);
 
-        openGallery(images, 'Imagen de zona de juegos', 'layout-juegos');
+    prevGalleryBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        animateGalleryBy(-1);
     });
-    
-    // Cafeteria Image Modal
-    cafeteriaCard.addEventListener('click', () => {
-        modalImage.src = 'img/Cafeteria.jpg';
-        modalImage.alt = 'Imagen de la cafeteria';
-        imageModal.style.display = 'block';
-    });
-    
-    // Arte y Creatividad Gallery
-    arteCard.addEventListener('click', () => {
-        const images = [
-            'img/Sala_Artes.jpg',
-            'img/Sala_Artes2.jpg'
-        ];
 
-        openGallery(images, 'Imagen de arte y creatividad', 'layout-arte');
+    nextGalleryBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        animateGalleryBy(1);
     });
-    
-    // Auditorio Gallery
-    auditorioCard.addEventListener('click', () => {
-        const images = [
-            'img/Auditorio.jpg',
-            'img/Auditorio2.jpg'
-        ];
 
-        openGallery(images, 'Imagen del auditorio', 'layout-auditorio');
+    galleryModal.addEventListener('click', (e) => {
+        if (e.target === galleryModal) {
+            closeManagedModal(galleryModal, 'gallery');
+        }
     });
-    
-    // Tecnología y Desarrollo Image Modal
-    tecnologiaCard.addEventListener('click', () => {
-        modalImage.src = 'img/Sala_Informatica.jpg';
-        modalImage.alt = 'Imagen de sala informática';
-        imageModal.style.display = 'block';
+
+    imageModal.addEventListener('click', (e) => {
+        if (e.target === imageModal) {
+            closeImageSlider();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        const imageIsOpen = imageModal.classList.contains('is-mounted');
+        const galleryIsOpen = galleryModal.classList.contains('is-mounted');
+        if (!imageIsOpen && !galleryIsOpen) return;
+
+        if (event.key === 'Escape') {
+            if (galleryIsOpen) {
+                closeManagedModal(galleryModal, 'gallery');
+            }
+            if (imageIsOpen) {
+                closeImageSlider();
+            }
+        } else if (event.key === 'ArrowLeft' && imageIsOpen) {
+            animateGalleryBy(-1);
+        } else if (event.key === 'ArrowRight' && imageIsOpen) {
+            animateGalleryBy(1);
+        }
+    });
+
+    Object.entries(galleriesByCard).forEach(([selector, config]) => {
+        const card = document.querySelector(selector);
+        if (!card) return;
+
+        card.addEventListener('click', () => {
+            if (responsiveGallery.matches || config.images.length === 1) {
+                openImageSlider(config.images, config.alt);
+                return;
+            }
+
+            openGallery(config.images, config.alt, config.layoutClass);
+        });
     });
 });
